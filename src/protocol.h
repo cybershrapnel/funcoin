@@ -18,7 +18,8 @@
 extern bool fTestNet;
 static inline unsigned short GetDefaultPort(const bool testnet = fTestNet)
 {
-    return testnet ? 12333 : 2333;
+// NanoCHeeZe changed default ports from 7372/7374 to 12781/12782
+    return testnet ? 12781 : 12782;
 }
 
 
@@ -69,7 +70,6 @@ class CMessageHeader
 enum
 {
     NODE_NETWORK = (1 << 0),
-    NODE_BLOOM = (1 << 1),
 };
 
 /** A CService with information about it as peer */
@@ -77,7 +77,7 @@ class CAddress : public CService
 {
     public:
         CAddress();
-        explicit CAddress(CService ipIn, uint64 nServicesIn=NODE_NETWORK);
+        explicit CAddress(CService ipIn, uint64_t nServicesIn=NODE_NETWORK);
 
         void Init();
 
@@ -96,17 +96,16 @@ class CAddress : public CService
              READWRITE(*pip);
             )
 
-        void print() const;
 
     // TODO: make private (improves encapsulation)
     public:
-        uint64 nServices;
+        uint64_t nServices;
 
         // disk and network only
         unsigned int nTime;
 
         // memory only
-        int64 nLastTry;
+        int64_t nLastTry;
 };
 
 /** inv message data */
@@ -128,21 +127,11 @@ class CInv
         bool IsKnownType() const;
         const char* GetCommand() const;
         std::string ToString() const;
-        void print() const;
 
     // TODO: make private (improves encapsulation)
     public:
         int type;
         uint256 hash;
-};
-
-enum
-{
-    MSG_TX = 1,
-    MSG_BLOCK,
-    // Nodes may always request a MSG_FILTERED_BLOCK in a getdata, however,
-    // MSG_FILTERED_BLOCK should not appear in any invs except as a part of getdata.
-    MSG_FILTERED_BLOCK,
 };
 
 #endif // __INCLUDED_PROTOCOL_H__
